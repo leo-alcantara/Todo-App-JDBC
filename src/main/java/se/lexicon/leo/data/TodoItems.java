@@ -5,10 +5,11 @@ import se.lexicon.leo.model.Person;
 import se.lexicon.leo.model.Todo;
 
 import java.util.Collection;
+import java.util.Date;
 
 public interface TodoItems {
 
-    Todo createNewTodo(String description);
+    Todo createNewTodo(String title, String description, Date deadline);
 
     Collection<Todo> findAll();
 

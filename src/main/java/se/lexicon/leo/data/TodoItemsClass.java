@@ -5,14 +5,15 @@ import se.lexicon.leo.model.Todo;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 public class TodoItemsClass implements TodoItems{
 
     private static Collection<Todo> todoList = new ArrayList<>();
 
     @Override
-    public Todo createNewTodo(String description) {
-        Todo todo = new Todo(description);
+    public Todo createNewTodo(String title, String description, Date deadline) {
+        Todo todo = new Todo(title, description, deadline);
         todoList.add(todo);
         return todo;
     }
@@ -26,7 +27,7 @@ public class TodoItemsClass implements TodoItems{
     public Todo findById(int todoId) {
         for (Todo todo :
                 todoList) {
-            if (todo.getTodoId() == todoId) {
+            if (todo.getTODOID() == todoId) {
                 return todo;
             }
         }
@@ -79,14 +80,14 @@ public class TodoItemsClass implements TodoItems{
 
     @Override
     public Todo update(Todo todo) {
-        findById(todo.getTodoId());
+        findById(todo.getTODOID());
         todoList.remove(todo);
-        return createNewTodo(todo.description);
+        return createNewTodo(todo.title, todo.description, todo.deadline);
     }
 
     @Override
     public boolean deleteById(int todoId) {
-        todoList.removeIf(todo -> todoId == todo.getTodoId());
+        todoList.removeIf(todo -> todoId == todo.getTODOID());
         return true;
     }
 

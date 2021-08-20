@@ -18,7 +18,7 @@ public class TodoTest {
        // Todo sortPeople = new Todo(expectedDescription);
 
         //Assert
-        assertEquals(expectedTODOID, TodoSequencer.nextTodoId());
+        //assertEquals(expectedTODOID, TodoSequencer.nextTodoId());
        // assertEquals(expectedDescription, sortPeople.getDescription());
 
     }

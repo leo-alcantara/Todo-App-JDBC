@@ -1,7 +1,10 @@
 package se.lexicon.leo.data;
 
+import se.lexicon.leo.db.MyConnection;
 import se.lexicon.leo.model.Person;
+import se.lexicon.leo.model.Todo;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -10,51 +13,84 @@ public class PeopleClass implements People {
     private static Collection<Person> personList = new ArrayList<>();
 
     @Override
-    public Person createNewPerson(String firstName, String lastName) {
-        Person person = new Person(firstName, lastName);
+    public Person createNewPerson(int PERSONID, String firstName, String lastName) {
+        Person person = new Person(PERSONID, firstName, lastName);
         personList.add(person);
         return person;
     }
 
     @Override
     public Collection<Person> findAll() {
-        return personList;
+        Collection<Person> foundPeople = new ArrayList<>();
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            String findAll = "SELECT*FROM person";
+            ResultSet rs = statement.executeQuery(findAll);
+
+            while (rs.next()){
+                Person person = new Person(rs.getInt(1), rs.getString(2), rs.getString(3));
+                foundPeople.add(person);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return foundPeople;
     }
 
     @Override
     public Person findById(int personId) {
-        for (Person p :
-                personList) {
-            if (p.getPersonId() == personId) {
-                return p;
+        String findByID ="SELECT*FROM person WHERE person_id = ?";
+        Person person = null;
+
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(findByID);
+            preparedStatement.setInt(1, personId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                person = new Person(rs.getInt(1), rs.getString(2), rs.getString(3));
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
-        return null;
+        return person;
+
     }
 
     @Override
     public Collection<Person> findByName(String personName){
         Collection<Person> foundNames = new ArrayList<>();
-        for (Person p:personList) {
-            if (personName.trim().equalsIgnoreCase(p.getFirstName()+p.getLastName())){
-                foundNames.add(p);
-                return foundNames;
+        String findByName ="SELECT*FROM person WHERE first_name = ?";
+
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(findByName);
+            preparedStatement.setString(1, personName);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                Person person = new Person(rs.getInt(1), rs.getString(2), rs.getString(3));
+                foundNames.add(person);
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
-        return null;
+        return foundNames;
     }
 
     @Override
     public Person update(Person person){
-        findById(person.getPersonId());
+        findById(person.getPERSONID());
         personList.remove(person);
-        createNewPerson(person.firstName, person.lastName);
+        createNewPerson(person.getPERSONID(), person.getFirstName(), person.getLastName());
         return person;
     }
 
     @Override
     public boolean deleteById(int personId) {
-        personList.removeIf(person -> personId == person.getPersonId());
+        personList.removeIf(person -> personId == person.getPERSONID());
         return true;
     }
 }

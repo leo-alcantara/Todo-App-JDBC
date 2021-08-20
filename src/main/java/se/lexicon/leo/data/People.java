@@ -6,7 +6,7 @@ import java.util.Collection;
 
 public interface People {
 
-    Person createNewPerson(String firstName, String lastName);
+    Person createNewPerson(int PERSONID, String firstName, String lastName);
 
     Collection<Person> findAll();
 

@@ -4,10 +4,7 @@ import se.lexicon.leo.db.MyConnection;
 import se.lexicon.leo.model.Person;
 import se.lexicon.leo.model.Todo;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +14,7 @@ public class TodoItemsClass implements TodoItems{
     private static Collection<Todo> todoList = new ArrayList<>();
 
     @Override
-    public Todo createNewTodo(int TODOID, String title, String description, LocalDate deadline, boolean done, Person assignee) {
+    public Todo create(int TODOID, String title, String description, LocalDate deadline, boolean done, Person assignee) {
         Todo todo = new Todo(TODOID, title, description, deadline, done, assignee);
         todoList.add(todo);
         return todo;
@@ -45,22 +42,43 @@ public class TodoItemsClass implements TodoItems{
 
     @Override
     public Todo findById(int todoId) {
-        for (Todo todo :
-                todoList) {
-            if (todo.getTODOID() == todoId) {
-                return todo;
+        String findByID ="SELECT*FROM todo_item WHERE todo_id = ?";
+        Todo todo = null;
+
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(findByID);
+            preparedStatement.setInt(1, todoId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
-        return null;
+        return todo;
     }
 
     @Override
     public Collection<Todo> findByDoneStatus(boolean doneStatus) {
         Collection<Todo> doneTodos = new ArrayList<>();
-        for (Todo todo : todoList) {
-            if (todo.isDone() == doneStatus) {
+        String findDoneStatus ="SELECT*FROM todo_item WHERE done = ?";
+
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(findDoneStatus);
+            preparedStatement.setBoolean(1, doneStatus);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                Todo todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
                 doneTodos.add(todo);
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
         return doneTodos;
     }
@@ -68,41 +86,83 @@ public class TodoItemsClass implements TodoItems{
     @Override
     public Collection<Todo> findByAssignee(int personId) {
         Collection<Todo> assigneeIdMatches = new ArrayList<>();
-        for (Todo todo : todoList) {
-            if (todo.getAssignee().getPERSONID() == personId) {
-                assigneeIdMatches.add(todo);
+        String findByAssigneeId ="SELECT*FROM todo_item WHERE assignee_id = ?";
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(findByAssigneeId);
+            preparedStatement.setInt(1, personId);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                Todo todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
         return assigneeIdMatches;
     }
 
     @Override
     public Collection<Todo> findByAssignee(Person assignee) {
-        Collection<Todo> assigneeIdMatches = new ArrayList<>();
-        for (Todo todo : todoList) {
-            if (todo.getAssignee() == assignee) {
-                assigneeIdMatches.add(todo);
+        Collection<Todo> assigneeMatches = new ArrayList<>();
+        String findByAssigneeObject ="SELECT*FROM todo_item WHERE assignee_id = ?";
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(findByAssigneeObject);
+            preparedStatement.setObject(1, assignee);
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                Todo todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
+                assigneeMatches.add(todo);
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
-        return assigneeIdMatches;
+        return assigneeMatches;
     }
 
     @Override
     public Collection<Todo> findUnassignedTodoItems() {
         Collection<Todo> unassignedTodo = new ArrayList<>();
-        for (Todo todo : todoList) {
-            if (todo.getAssignee() == null) {
+        String findUnassignedTodos ="SELECT*FROM todo_item WHERE assignee_id Is null";
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery(findUnassignedTodos);
+
+            while (rs.next()){
+                Todo todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
                 unassignedTodo.add(todo);
             }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
         }
         return unassignedTodo;
     }
 
     @Override
     public Todo update(Todo todo) {
-        findById(todo.getTODOID());
-        todoList.remove(todo);
-        return createNewTodo(todo.TODOID, todo.title, todo.description, todo.deadline, todo.isDone(), todo.assignee);
+        String updateTodo ="SELECT*FROM todo_item";
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(updateTodo);
+            //preparedStatement.setObject();
+            ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()){
+                todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
+
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return todo;
     }
 
     @Override

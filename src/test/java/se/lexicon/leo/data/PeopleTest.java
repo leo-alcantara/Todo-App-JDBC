@@ -9,7 +9,8 @@ import java.util.Collection;
 import static org.junit.Assert.assertEquals;
 
 
-public class PeopleTest<assertEquals> {
+public class PeopleTest {
+
     private PeopleClass myPeople;
     String firstName = "John";
     String lastName = "Doe";
@@ -17,14 +18,12 @@ public class PeopleTest<assertEquals> {
     @Before
     public void before() {
         myPeople = new PeopleClass();
-        //myPeople.clear();
     }
 
 
     @Test
-    public void findAllTest() {
+    public void test_findAllTest_Successful() {
         //Arrange
-        Person newPerson;
         Collection<Person> personList;
 
         //Act
@@ -37,11 +36,11 @@ public class PeopleTest<assertEquals> {
     }
 
     @Test
-    public void findByIdTest() {
+    public void test_findByIdTest_Successful() {
         //Arrange
         Person newPerson;
         //Act
-        newPerson = myPeople.findById(12);
+        newPerson = myPeople.findById(1);
 
         //Assert
         assertEquals(null, newPerson);

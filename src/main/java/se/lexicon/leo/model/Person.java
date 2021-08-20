@@ -1,6 +1,6 @@
 package se.lexicon.leo.model;
 
-import se.lexicon.leo.data.PersonSequencer;
+import java.util.Objects;
 
 public class Person {
 
@@ -8,15 +8,13 @@ public class Person {
     public String firstName;
     public String lastName;
 
-
-    public Person (String firstName, String lastName){
-        this.PERSONID = PersonSequencer.nextPersonId();
+    public Person(int PERSONID, String firstName, String lastName) {
+        this.PERSONID = PERSONID;
         this.firstName = firstName;
         this.lastName = lastName;
-
     }
 
-    public int getPersonId() {
+    public int getPERSONID() {
         return PERSONID;
     }
 
@@ -34,5 +32,27 @@ public class Person {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "PERSONID=" + PERSONID +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return getPERSONID() == person.getPERSONID() && getFirstName().equals(person.getFirstName()) && getLastName().equals(person.getLastName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPERSONID(), getFirstName(), getLastName());
     }
 }

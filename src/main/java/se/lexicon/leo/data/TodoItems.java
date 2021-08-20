@@ -4,12 +4,12 @@ package se.lexicon.leo.data;
 import se.lexicon.leo.model.Person;
 import se.lexicon.leo.model.Todo;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 
 public interface TodoItems {
 
-    Todo createNewTodo(String title, String description, Date deadline);
+    Todo createNewTodo(int TODOID, String title, String description, LocalDate deadline, boolean done, Person assignee);
 
     Collection<Todo> findAll();
 

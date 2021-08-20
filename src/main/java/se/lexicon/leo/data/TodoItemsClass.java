@@ -1,26 +1,46 @@
 package se.lexicon.leo.data;
 
+import se.lexicon.leo.db.MyConnection;
 import se.lexicon.leo.model.Person;
 import se.lexicon.leo.model.Todo;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 public class TodoItemsClass implements TodoItems{
 
     private static Collection<Todo> todoList = new ArrayList<>();
 
     @Override
-    public Todo createNewTodo(String title, String description, Date deadline) {
-        Todo todo = new Todo(title, description, deadline);
+    public Todo createNewTodo(int TODOID, String title, String description, LocalDate deadline, boolean done, Person assignee) {
+        Todo todo = new Todo(TODOID, title, description, deadline, done, assignee);
         todoList.add(todo);
         return todo;
     }
 
     @Override
     public Collection<Todo> findAll() {
-        return todoList;
+        Collection<Todo> foundTodos = new ArrayList<>();
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            Statement statement = connection.createStatement();
+            String findAll = "SELECT*FROM todo_item";
+            ResultSet rs = statement.executeQuery(findAll);
+
+            while (rs.next()){
+                Todo todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
+                foundTodos.add(todo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return foundTodos;
     }
 
     @Override
@@ -49,7 +69,7 @@ public class TodoItemsClass implements TodoItems{
     public Collection<Todo> findByAssignee(int personId) {
         Collection<Todo> assigneeIdMatches = new ArrayList<>();
         for (Todo todo : todoList) {
-            if (todo.getAssignee().getPersonId() == personId) {
+            if (todo.getAssignee().getPERSONID() == personId) {
                 assigneeIdMatches.add(todo);
             }
         }
@@ -82,7 +102,7 @@ public class TodoItemsClass implements TodoItems{
     public Todo update(Todo todo) {
         findById(todo.getTODOID());
         todoList.remove(todo);
-        return createNewTodo(todo.title, todo.description, todo.deadline);
+        return createNewTodo(todo.TODOID, todo.title, todo.description, todo.deadline, todo.isDone(), todo.assignee);
     }
 
     @Override

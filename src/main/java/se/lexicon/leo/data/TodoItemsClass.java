@@ -14,9 +14,26 @@ public class TodoItemsClass implements TodoItems{
     private static Collection<Todo> todoList = new ArrayList<>();
 
     @Override
-    public Todo create(int TODOID, String title, String description, LocalDate deadline, boolean done, Person assignee) {
-        Todo todo = new Todo(TODOID, title, description, deadline, done, assignee);
-        todoList.add(todo);
+    public Todo create(Todo todo) {
+        String createTodo = "INSERT INTO todo_item (title, description, deadline, done, assignee_id) VALUES ( ?, ?, ?, ?, ?)";
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedstatement = connection.prepareStatement(createTodo);
+            preparedstatement.setString(1, todo.title);
+            preparedstatement.setString(2, todo.description);
+            preparedstatement.setDate(3, todo.deadline.);
+            preparedstatement.setBoolean(4,todo.done);
+            preparedstatement.setInt(5, todo.assignee.getPERSONID());
+            preparedstatement.executeUpdate(createTodo);
+
+            ResultSet rs = preparedstatement.getResultSet();
+
+               todo = new Todo(rs.getInt(1),rs.getString(2), rs.getString(3),
+                        rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
+                return todo;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return todo;
     }
 
@@ -147,7 +164,10 @@ public class TodoItemsClass implements TodoItems{
 
     @Override
     public Todo update(Todo todo) {
-        String updateTodo ="SELECT*FROM todo_item";
+        //String sql="update  todo_item set name='GFG' where id=2";
+        //String updateTodo = "update todo_item set ";
+
+        /*String updateTodo ="SELECT*FROM todo_item  WHERE ";
         try {
             Connection connection = MyConnection.getInstance().getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(updateTodo);
@@ -161,14 +181,27 @@ public class TodoItemsClass implements TodoItems{
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
-        }
+        }*/
         return todo;
     }
 
     @Override
     public boolean deleteById(int todoId) {
-        todoList.removeIf(todo -> todoId == todo.getTODOID());
-        return true;
+        String deleteTodoByID ="DELETE FROM todo_item WHERE todo_id = ?";
+
+        try {
+            Connection connection = MyConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(deleteTodoByID);
+            preparedStatement.setInt(1, todoId);
+            int deletedRows = preparedStatement.executeUpdate(deleteTodoByID);
+            //IF Statement
+            if(deletedRows==1){
+                return true;
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return false;
     }
 
 

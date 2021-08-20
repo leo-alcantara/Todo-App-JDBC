@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public interface TodoItems {
 
-    Todo create(int TODOID, String title, String description, LocalDate deadline, boolean done, Person assignee);
+    Todo create(Todo todo);
 
     Collection<Todo> findAll();
 

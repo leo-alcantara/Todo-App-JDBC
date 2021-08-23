@@ -7,7 +7,7 @@ import se.lexicon.leo.model.Todo;
 import java.time.LocalDate;
 import java.util.Collection;
 
-public interface TodoItems {
+public interface TodoItemsDAO {
 
     Todo create(Todo todo);
 

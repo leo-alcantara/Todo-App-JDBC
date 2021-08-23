@@ -1,7 +1,9 @@
 package se.lexicon.leo;
 
-import se.lexicon.leo.data.PeopleClass;
-import se.lexicon.leo.data.TodoItemsClass;
+import javafx.util.converter.PercentageStringConverter;
+import se.lexicon.leo.data.PeopleDAOIMPL;
+import se.lexicon.leo.data.TodoItemsDAOIMPL;
+import se.lexicon.leo.model.Person;
 import se.lexicon.leo.model.Todo;
 
 import java.time.LocalDate;
@@ -14,8 +16,9 @@ public class App
 {
     public static void main( String[] args ) {
 
-        TodoItemsClass todoItemsClass = new TodoItemsClass();
-        PeopleClass peopleClass = new PeopleClass();
+        TodoItemsDAOIMPL todoItemsClass = new TodoItemsDAOIMPL();
+        PeopleDAOIMPL peopleClass = new PeopleDAOIMPL();
+        Person newPerson = peopleClass.findById(2);
 
         /*todoItemsClass.findAll().forEach(System.out::println);
 
@@ -38,8 +41,13 @@ public class App
         //todoItemsClass.deleteById(3);
 
 
-        todoItemsClass.create(new Todo(0,"Gardening", "Fix garden", LocalDate.parse("2021-10-10"), false, null));
-        todoItemsClass.findAll().forEach(System.out::println);
+        //todoItemsClass.create(new Todo(0,"Gardening", "Fix garden", LocalDate.parse("2021-10-10"), false, null));
+        //todoItemsClass.findAll().forEach(System.out::println);
+
+        Todo todo = todoItemsClass.findById(18);
+        todo.setAssignee(newPerson);
+        todo.setTitle("Cut the Tress");
+        System.out.println(todoItemsClass.update(todo));
 
 
 

@@ -4,9 +4,9 @@ import se.lexicon.leo.model.Person;
 
 import java.util.Collection;
 
-public interface People {
+public interface PeopleDAO {
 
-    Person createNewPerson(int PERSONID, String firstName, String lastName);
+    Person create(Person person);
 
     Collection<Person> findAll();
 

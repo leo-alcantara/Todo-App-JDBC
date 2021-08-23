@@ -111,14 +111,49 @@ public class PeopleDAOIMPL implements PeopleDAO {
 
     @Override
     public Person update(Person person){
+        int numberOfRowsAffected = 0;
+        String updatePerson = "UPDATE person SET first_name = ?, last_name = ? WHERE person_id = ? ";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
 
-        return person;
+        try {
+            connection = MyConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(updatePerson);
+            preparedStatement.setString(1, person.getFirstName());
+            preparedStatement.setString(2, person.getLastName());
+            preparedStatement.setInt(3, person.getPERSONID());
+
+            numberOfRowsAffected = preparedStatement.executeUpdate();
+
+            if(numberOfRowsAffected >= 1) {
+                return person;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @Override
     public boolean deleteById(int personId) {
-        personList.removeIf(person -> personId == person.getPERSONID());
-        return true;
+        String deletePersonByID = "DELETE FROM person WHERE person_id = ?";
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = MyConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(deletePersonByID);
+            preparedStatement.setInt(1, personId);
+            int deletedRows = preparedStatement.executeUpdate();
+
+            if (deletedRows >= 1) {
+                return true;
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return false;
     }
 }
 

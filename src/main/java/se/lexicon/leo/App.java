@@ -40,10 +40,6 @@ public class App
 
         //todoItemsClass.deleteById(3);
 
-
-        //todoItemsClass.create(new Todo(0,"Gardening", "Fix garden", LocalDate.parse("2021-10-10"), false, null));
-        //todoItemsClass.findAll().forEach(System.out::println);
-
         Todo todo = todoItemsClass.findById(18);
         todo.setAssignee(newPerson);
         todo.setTitle("Cut the Tress");

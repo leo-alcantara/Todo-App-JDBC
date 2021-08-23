@@ -195,7 +195,6 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
     @Override
     public Todo update(Todo todo) {
 
-
         int numberOfRowsAffected = 0;
         String updateTodo = "UPDATE todo_item SET title = ?, description = ?, deadline = ?, done = ?, assignee_id = ? WHERE todo_id = ? ";
         Connection connection = null;
@@ -234,7 +233,7 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
             preparedStatement.setInt(1, todoId);
             int deletedRows = preparedStatement.executeUpdate();
 
-            if (deletedRows == 1) {
+            if (deletedRows >= 1) {
                 return true;
             }
         } catch (SQLException exception) {

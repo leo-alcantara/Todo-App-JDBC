@@ -15,25 +15,30 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
 
     @Override
     public Todo create(Todo todo) {
+
+        //Column Index out of range, 2 > 1.
+
         String createTodo = "INSERT INTO todo_item (title, description, deadline, done, assignee_id) VALUES ( ?, ?, ?, ?, ?)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
         try {
             connection = MyConnection.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(createTodo);
+            preparedStatement = connection.prepareStatement(createTodo, Statement.RETURN_GENERATED_KEYS);
+
             preparedStatement.setString(1, todo.getTitle());
             preparedStatement.setString(2, todo.getDescription());
             preparedStatement.setString(3, todo.getDeadline().toString());
-            preparedStatement.setBoolean(4, todo.isDone()); //Ask Simon how to get or if needs the done
-            preparedStatement.setInt(5, todo.assignee.getPERSONID());
-            preparedStatement.executeUpdate(createTodo);
+            preparedStatement.setBoolean(4, todo.isDone());
+            preparedStatement.setInt(5, todo.getAssignee().getPERSONID());
+            preparedStatement.executeUpdate();
 
-            rs = preparedStatement.getResultSet();
+            rs = preparedStatement.getGeneratedKeys();
 
-            todo = new Todo(rs.getInt(1), rs.getString(2), rs.getString(3),
-                    rs.getDate(4).toLocalDate(), rs.getBoolean(5), null);
-            return todo;
+            if (rs.next()) {
+                todo = new Todo(rs.getInt(1), todo.getTitle(), todo.getDescription(),
+                        todo.getDeadline(), todo.isDone(), todo.getAssignee());
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -211,11 +216,12 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
             preparedStatement.setInt(6, todo.getTODOID());
             numberOfRowsAffected = preparedStatement.executeUpdate();
 
-            if(numberOfRowsAffected >= 1) {
-                return todo;
-            }
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+
+        if (numberOfRowsAffected >= 1) {
+            return todo;
         }
         return null;
     }

@@ -19,16 +19,19 @@ public class PeopleDAOIMPL implements PeopleDAO {
        PreparedStatement preparedStatement = null;
        ResultSet rs = null;
 
-       connection = MyConnection.getInstance().getConnection();
         try {
-            preparedStatement = connection.prepareStatement(create);
+            connection = MyConnection.getInstance().getConnection();
+            preparedStatement = connection.prepareStatement(create, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, person.getFirstName());
             preparedStatement.setString(2, person.getLastName());
             preparedStatement.executeUpdate();
 
-            rs = preparedStatement.getResultSet();
+            rs = preparedStatement.getGeneratedKeys();
 
-            person = new Person(rs.getInt(1), rs.getString(2), rs.getString(3));
+            if(rs.next()){
+                person = new Person(rs.getInt(1), person.getFirstName(), person.getLastName());
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();

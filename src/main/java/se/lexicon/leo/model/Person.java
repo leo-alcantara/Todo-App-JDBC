@@ -1,7 +1,5 @@
 package se.lexicon.leo.model;
 
-import java.util.Objects;
-
 public class Person {
 
     private final int PERSONID;
@@ -43,16 +41,5 @@ public class Person {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return getPERSONID() == person.getPERSONID() && getFirstName().equals(person.getFirstName()) && getLastName().equals(person.getLastName());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPERSONID(), getFirstName(), getLastName());
-    }
 }

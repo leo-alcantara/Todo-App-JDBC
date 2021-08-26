@@ -1,12 +1,11 @@
 package se.lexicon.leo.model;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class Todo {
 
-    public final int TODOID;
+    public int todoId;
     public String title;
     public String description;
     public LocalDate deadline;
@@ -14,8 +13,8 @@ public class Todo {
     public Person assignee;
 
 
-    public Todo(int TODOID, String title, String description, LocalDate deadline, boolean done, Person assignee) {
-        this.TODOID = TODOID;
+    public Todo(int todoId, String title, String description, LocalDate deadline, boolean done, Person assignee) {
+        this.todoId = todoId;
         this.title = title;
         this.description = description;
         this.deadline = deadline;
@@ -23,8 +22,12 @@ public class Todo {
         this.assignee = assignee;
     }
 
-    public int getTODOID() {
-        return TODOID;
+    public int getTodoId() {
+        return todoId;
+    }
+
+    public void setTodoId(int todoId) {
+        this.todoId = todoId;
     }
 
     public String getTitle() {
@@ -70,7 +73,7 @@ public class Todo {
     @Override
     public String toString() {
         return "Todo{" +
-                "TODOID=" + TODOID +
+                "TODOID=" + todoId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", deadline=" + deadline +
@@ -84,12 +87,12 @@ public class Todo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Todo todo = (Todo) o;
-        return getTODOID() == todo.getTODOID() && isDone() == todo.isDone() && getTitle().equals(todo.getTitle()) && Objects.equals(getDescription(), todo.getDescription()) && Objects.equals(getDeadline(), todo.getDeadline()) && Objects.equals(getAssignee(), todo.getAssignee());
+        return getTodoId() == todo.getTodoId() && isDone() == todo.isDone() && getTitle().equals(todo.getTitle()) && Objects.equals(getDescription(), todo.getDescription()) && Objects.equals(getDeadline(), todo.getDeadline()) && Objects.equals(getAssignee(), todo.getAssignee());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTODOID(), getTitle(), getDescription(), getDeadline(), isDone(), getAssignee());
+        return Objects.hash(getTodoId(), getTitle(), getDescription(), getDeadline(), isDone(), getAssignee());
     }
 }
 

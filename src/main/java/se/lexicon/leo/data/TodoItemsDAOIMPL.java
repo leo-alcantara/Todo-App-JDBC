@@ -16,8 +16,6 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
     @Override
     public Todo create(Todo todo) {
 
-        //Column Index out of range, 2 > 1.
-
         String createTodo = "INSERT INTO todo_item (title, description, deadline, done, assignee_id) VALUES ( ?, ?, ?, ?, ?)";
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -213,7 +211,7 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
             preparedStatement.setString(3, todo.getDeadline().toString());
             preparedStatement.setBoolean(4, todo.isDone());
             preparedStatement.setInt(5, todo.getAssignee().getPERSONID());
-            preparedStatement.setInt(6, todo.getTODOID());
+            preparedStatement.setInt(6, todo.getTodoId());
             numberOfRowsAffected = preparedStatement.executeUpdate();
 
         } catch (SQLException e) {

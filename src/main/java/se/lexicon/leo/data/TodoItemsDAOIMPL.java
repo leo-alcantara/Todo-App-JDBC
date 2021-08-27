@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class TodoItemsDAOIMPL implements TodoItemsDAO {
 
-    private static Collection<Todo> todoList = new ArrayList<>();
+    PeopleDAOIMPL peopleDAOIMPL = new PeopleDAOIMPL();
 
     @Override
     public Todo create(Todo todo) {
@@ -22,20 +22,27 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
         ResultSet rs = null;
         try {
             connection = MyConnection.getInstance().getConnection();
-            preparedStatement = connection.prepareStatement(createTodo, Statement.RETURN_GENERATED_KEYS);
+            //todo: write a new select statement from the person table by id, if exist continue else show error
 
-            preparedStatement.setString(1, todo.getTitle());
-            preparedStatement.setString(2, todo.getDescription());
-            preparedStatement.setString(3, todo.getDeadline().toString());
-            preparedStatement.setBoolean(4, todo.isDone());
-            preparedStatement.setInt(5, todo.getAssignee().getPERSONID());
-            preparedStatement.executeUpdate();
+            if (peopleDAOIMPL.findById(todo.getAssignee().getPersonId()) != null) {
 
-            rs = preparedStatement.getGeneratedKeys();
+                preparedStatement = connection.prepareStatement(createTodo, Statement.RETURN_GENERATED_KEYS);
 
-            if (rs.next()) {
-                todo = new Todo(rs.getInt(1), todo.getTitle(), todo.getDescription(),
-                        todo.getDeadline(), todo.isDone(), todo.getAssignee());
+                preparedStatement.setString(1, todo.getTitle());
+                preparedStatement.setString(2, todo.getDescription());
+                preparedStatement.setString(3, todo.getDeadline().toString());
+                preparedStatement.setBoolean(4, todo.isDone());
+                preparedStatement.setInt(5, todo.getAssignee().getPersonId());
+                preparedStatement.executeUpdate();
+
+                rs = preparedStatement.getGeneratedKeys();
+
+                if (rs.next()) {
+                    todo = new Todo(rs.getInt(1), todo.getTitle(), todo.getDescription(),
+                            todo.getDeadline(), todo.isDone(), todo.getAssignee());
+                }
+            } else {
+                System.out.println("Task can not be created because assignee does not exist.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -155,7 +162,7 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
         try {
             connection = MyConnection.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(findByAssigneeObject);
-            preparedStatement.setObject(1, assignee.getPERSONID());
+            preparedStatement.setObject(1, assignee.getPersonId());
             rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
@@ -210,7 +217,7 @@ public class TodoItemsDAOIMPL implements TodoItemsDAO {
             preparedStatement.setString(2, todo.getDescription());
             preparedStatement.setString(3, todo.getDeadline().toString());
             preparedStatement.setBoolean(4, todo.isDone());
-            preparedStatement.setInt(5, todo.getAssignee().getPERSONID());
+            preparedStatement.setInt(5, todo.getAssignee().getPersonId());
             preparedStatement.setInt(6, todo.getTodoId());
             numberOfRowsAffected = preparedStatement.executeUpdate();
 

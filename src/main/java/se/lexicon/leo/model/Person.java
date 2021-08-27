@@ -2,18 +2,27 @@ package se.lexicon.leo.model;
 
 public class Person {
 
-    private final int PERSONID;
-    public String firstName;
-    public String lastName;
-
-    public Person(int PERSONID, String firstName, String lastName) {
-        this.PERSONID = PERSONID;
+    private int personId;
+    private String firstName;
+    private String lastName;
+    // select or fetch
+    public Person(int personId, String firstName, String lastName) {
+        this.personId = personId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    // create or add data
+    public Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public int getPERSONID() {
-        return PERSONID;
+    public int getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(int personId) {
+        this.personId = personId;
     }
 
     public String getFirstName() {
@@ -35,7 +44,7 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "PERSONID=" + PERSONID +
+                "PERSONID=" + personId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';

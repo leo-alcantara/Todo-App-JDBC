@@ -7,24 +7,20 @@ import se.lexicon.leo.model.Todo;
 
 import java.time.LocalDate;
 
-/**
- * Hello world!
- *
- */
+
 public class App {
-    public static void main( String[] args ) {
+    public static void main(String[] args) {
         TodoItemsDAOIMPL todoItemsDAOIMPL = new TodoItemsDAOIMPL();
         PeopleDAOIMPL peopleDAOIMPL = new PeopleDAOIMPL();
 
-        Person newPerson = new Person(0, "Maximus", "Decimus Miridius");
-        Todo newTodo = new Todo(0,"Kill roman soldiers", "Cut off their heads", LocalDate.now(), false, peopleDAOIMPL.findById(109));
+        Person newPerson = new Person("Maximus", "Decimus Miridius");
+
+        Todo newTodo = new Todo("Shoot the bandits", "Shoot them all", LocalDate.now(), false, peopleDAOIMPL.findById(109));
+        System.out.println(todoItemsDAOIMPL.create(newTodo));
 
 
         //newTodo.setAssignee(newPerson);
         //System.out.println(peopleDAOIMPL.create(newPerson));
-        System.out.println(todoItemsDAOIMPL.create(newTodo));
-
-
 
 
     }

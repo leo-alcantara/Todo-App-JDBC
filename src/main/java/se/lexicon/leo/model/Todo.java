@@ -5,16 +5,24 @@ import java.util.Objects;
 
 public class Todo {
 
-    public int todoId;
-    public String title;
-    public String description;
-    public LocalDate deadline;
-    public boolean done;
-    public Person assignee;
+    private int todoId;
+    private String title;
+    private String description;
+    private LocalDate deadline;
+    private boolean done;
+    private Person assignee;
 
 
     public Todo(int todoId, String title, String description, LocalDate deadline, boolean done, Person assignee) {
         this.todoId = todoId;
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+        this.done = done;
+        this.assignee = assignee;
+    }
+
+    public Todo(String title, String description, LocalDate deadline, boolean done, Person assignee) {
         this.title = title;
         this.description = description;
         this.deadline = deadline;

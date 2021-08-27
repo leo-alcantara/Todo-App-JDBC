@@ -124,7 +124,7 @@ public class PeopleDAOIMPL implements PeopleDAO {
             preparedStatement = connection.prepareStatement(updatePerson);
             preparedStatement.setString(1, person.getFirstName());
             preparedStatement.setString(2, person.getLastName());
-            preparedStatement.setInt(3, person.getPERSONID());
+            preparedStatement.setInt(3, person.getPersonId());
 
             numberOfRowsAffected = preparedStatement.executeUpdate();
 

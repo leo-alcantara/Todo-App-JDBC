@@ -10,13 +10,18 @@ import java.time.LocalDate;
 
 public class App {
     public static void main(String[] args) {
+
         TodoItemsDAOIMPL todoItemsDAOIMPL = new TodoItemsDAOIMPL();
         PeopleDAOIMPL peopleDAOIMPL = new PeopleDAOIMPL();
 
         Person newPerson = new Person("Maximus", "Decimus Miridius");
 
-        Todo newTodo = new Todo("Shoot the bandits", "Shoot them all", LocalDate.now(), false, peopleDAOIMPL.findById(109));
-        System.out.println(todoItemsDAOIMPL.create(newTodo));
+        Todo newTodo = new Todo("Shoot the bandits", "Shoot them all", LocalDate.now(), false, null);
+        //todoItemsDAOIMPL.create(newTodo);
+
+        todoItemsDAOIMPL.findAll().forEach(System.out::println);
+
+       // System.out.println(peopleDAOIMPL.findById(200));
 
 
         //newTodo.setAssignee(newPerson);

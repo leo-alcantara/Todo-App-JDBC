@@ -5,13 +5,13 @@ public class Person {
     private int personId;
     private String firstName;
     private String lastName;
-    // select or fetch
+
     public Person(int personId, String firstName, String lastName) {
         this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
     }
-    // create or add data
+
     public Person(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;

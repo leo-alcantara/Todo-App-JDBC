@@ -2,6 +2,7 @@ package se.lexicon.leo.data;
 
 import se.lexicon.leo.db.MyConnection;
 import se.lexicon.leo.model.Person;
+import se.lexicon.leo.model.Todo;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,7 +10,8 @@ import java.util.Collection;
 
 public class PeopleDAOIMPL implements PeopleDAO {
 
-    private static Collection<Person> personList = new ArrayList<>();
+    //private static Collection<Person> personList = new ArrayList<>();
+    TodoItemsDAOIMPL todoItemsDAOIMPL = new TodoItemsDAOIMPL();
 
     @Override
     public Person create(Person person) {
@@ -148,6 +150,10 @@ public class PeopleDAOIMPL implements PeopleDAO {
             connection = MyConnection.getInstance().getConnection();
             preparedStatement = connection.prepareStatement(deletePersonByID);
             preparedStatement.setInt(1, personId);
+            Collection<Todo> todoCollection = new ArrayList<>(todoItemsDAOIMPL.findByAssignee(personId));
+            for (Todo todo:todoCollection) {
+                    todo.setAssignee(null);
+            }
             int deletedRows = preparedStatement.executeUpdate();
 
             if (deletedRows >= 1) {

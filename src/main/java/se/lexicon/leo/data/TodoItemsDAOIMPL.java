@@ -11,7 +11,7 @@ import java.util.Collection;
 
 public class TodoItemsDAOIMPL implements TodoItemsDAO {
 
-    PeopleDAOIMPL peopleDAOIMPL = new PeopleDAOIMPL();
+    //PeopleDAOIMPL peopleDAOIMPL = new PeopleDAOIMPL();
 
     @Override
     public Todo create(Todo todo) {

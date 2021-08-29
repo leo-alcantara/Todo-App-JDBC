@@ -11,6 +11,7 @@ public class Todo {
     private LocalDate deadline;
     private boolean done;
     private Person assignee;
+    private int assigneeId;
 
 
     public Todo(int todoId, String title, String description, LocalDate deadline, boolean done, Person assignee) {

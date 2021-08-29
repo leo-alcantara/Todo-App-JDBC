@@ -19,10 +19,13 @@ public class App {
         Todo newTodo = new Todo("Shoot the bandits", "Shoot them all", LocalDate.now(), false, null);
         //todoItemsDAOIMPL.create(newTodo);
 
-        todoItemsDAOIMPL.findAll().forEach(System.out::println);
+        //todoItemsDAOIMPL.findAll().forEach(System.out::println);
 
        // System.out.println(peopleDAOIMPL.findById(200));
 
+        peopleDAOIMPL.deleteById(111);
+
+        //todoItemsDAOIMPL.deleteById(1);
 
         //newTodo.setAssignee(newPerson);
         //System.out.println(peopleDAOIMPL.create(newPerson));
